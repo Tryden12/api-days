@@ -1,11 +1,21 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: api-days
+Description: API-DAYS
 Transform:
 - AWS::Serverless-2016-10-31
 Resources:
-  getAllItemsFunction:
+  AprenderoApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: V1
+      Description: API supporting the application
+      Cors:
+        AllowHeaders: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'''
+        AllowMethods: '''DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT'''
+        AllowOrigin: '''*'''
+  GetAllItems:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: getAllItems
       Handler: src/handlers/get-all-items.getAllItemsHandler
       Runtime: nodejs16.x
       Architectures:
@@ -17,23 +27,26 @@ Resources:
       Policies:
       - DynamoDBCrudPolicy:
           TableName:
-            Ref: SampleTable
+            Ref: DayTable
       Environment:
         Variables:
-          SAMPLE_TABLE:
-            Ref: SampleTable
+          DAY_TABLE:
+            Ref: DayTable
       Events:
         Api:
           Type: Api
           Properties:
+            RestApiId:
+              Ref: AprenderoApi
             Path: /
             Method: GET
-      CodeUri: getAllItemsFunction
+      CodeUri: GetAllItems
     Metadata:
-      SamResourceId: getAllItemsFunction
-  getByIdFunction:
+      SamResourceId: GetAllItems
+  GetById:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: getById
       Handler: src/handlers/get-by-id.getByIdHandler
       Runtime: nodejs16.x
       Architectures:
@@ -45,23 +58,26 @@ Resources:
       Policies:
       - DynamoDBCrudPolicy:
           TableName:
-            Ref: SampleTable
+            Ref: DayTable
       Environment:
         Variables:
-          SAMPLE_TABLE:
-            Ref: SampleTable
+          DAY_TABLE:
+            Ref: DayTable
       Events:
         Api:
           Type: Api
           Properties:
+            RestApiId:
+              Ref: AprenderoApi
             Path: /{id}
             Method: GET
-      CodeUri: getByIdFunction
+      CodeUri: GetById
     Metadata:
-      SamResourceId: getByIdFunction
-  putItemFunction:
+      SamResourceId: GetById
+  PutItem:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: putItem
       Handler: src/handlers/put-item.putItemHandler
       Runtime: nodejs16.x
       Architectures:
@@ -73,31 +89,37 @@ Resources:
       Policies:
       - DynamoDBCrudPolicy:
           TableName:
-            Ref: SampleTable
+            Ref: DayTable
       Environment:
         Variables:
-          SAMPLE_TABLE:
-            Ref: SampleTable
+          DAY_TABLE:
+            Ref: DayTable
       Events:
         Api:
           Type: Api
           Properties:
+            RestApiId:
+              Ref: AprenderoApi
             Path: /
             Method: POST
-      CodeUri: putItemFunction
+      CodeUri: PutItem
     Metadata:
-      SamResourceId: putItemFunction
-  SampleTable:
-    Type: AWS::Serverless::SimpleTable
+      SamResourceId: PutItem
+  DayTable:
+    Type: AWS::DynamoDB::Table
     Properties:
-      PrimaryKey:
-        Name: id
-        Type: String
+      TableName: DAY_TABLE
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: 2
         WriteCapacityUnits: 2
 Outputs:
   WebEndpoint:
-    Description: API Gateway endpoint URL for Prod stage
+    Description: API Gateway endpoint URL for your App configuration
     Value:
-      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/
+      Fn::Sub: https://${AprenderoApi}.execute-api.${AWS::Region}.amazonaws.com/V1/
