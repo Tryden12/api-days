@@ -51,7 +51,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref AprenderoApi
-            Path: /
+            Path: /GetAllItems
             Method: GET
 
   # Lambda function config associated with the source code: get-by-id.js
@@ -79,7 +79,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref AprenderoApi
-            Path: /{id}
+            Path: /GetById/{id}
             Method: GET
 
   # Lambda function config associated with the source code: put-item.js
@@ -107,8 +107,38 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref AprenderoApi
-            Path: /
+            Path: /PutItem
             Method: POST
+
+  # Lambda function config associated with the source code: delete-item.js
+  DeleteItem:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: deleteItem
+      Handler: src/handlers/delete-item.deleteItemHandler
+      Runtime: nodejs16.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: HTTP delete method to delete one item from a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the DayTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DayTable
+      Environment:
+        Variables:
+          # Make table name accessible as environment variable from function code during execution
+          DAY_TABLE: !Ref DayTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref AprenderoApi
+            Path: /DeleteItem/{id}
+            Method: DELETE
+
+
   # Simple syntax to create a DynamoDB table with a single attribute primary key, more in
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlesssimpletable
 

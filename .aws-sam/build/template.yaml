@@ -38,7 +38,7 @@ Resources:
           Properties:
             RestApiId:
               Ref: AprenderoApi
-            Path: /
+            Path: /GetAllItems
             Method: GET
       CodeUri: GetAllItems
     Metadata:
@@ -69,7 +69,7 @@ Resources:
           Properties:
             RestApiId:
               Ref: AprenderoApi
-            Path: /{id}
+            Path: /GetById/{id}
             Method: GET
       CodeUri: GetById
     Metadata:
@@ -100,11 +100,41 @@ Resources:
           Properties:
             RestApiId:
               Ref: AprenderoApi
-            Path: /
+            Path: /PutItem
             Method: POST
       CodeUri: PutItem
     Metadata:
       SamResourceId: PutItem
+  DeleteItem:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: deleteItem
+      Handler: src/handlers/delete-item.deleteItemHandler
+      Runtime: nodejs16.x
+      Architectures:
+      - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: HTTP delete method to delete one item from a DynamoDB table.
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: DayTable
+      Environment:
+        Variables:
+          DAY_TABLE:
+            Ref: DayTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: AprenderoApi
+            Path: /DeleteItem/{id}
+            Method: DELETE
+      CodeUri: DeleteItem
+    Metadata:
+      SamResourceId: DeleteItem
   DayTable:
     Type: AWS::DynamoDB::Table
     Properties:
