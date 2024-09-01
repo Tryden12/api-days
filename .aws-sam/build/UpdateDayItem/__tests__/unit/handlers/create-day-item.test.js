@@ -1,10 +1,10 @@
 // Import all functions from put-item.js 
-const lambda = require('../../../src/handlers/put-item.js'); 
+const lambda = require('../../../src/handlers/create-day-item.js'); 
 // Import dynamodb from aws-sdk 
 const dynamodb = require('aws-sdk/clients/dynamodb'); 
  
-// This includes all tests for putItemHandler() 
-describe('Test putItemHandler', function () { 
+// This includes all tests for CreateDayItem() 
+describe('Test CreateDayItem', function () { 
     let putSpy; 
  
     // Test one-time setup and teardown, see more in https://jestjs.io/docs/en/setup-teardown 
@@ -33,8 +33,8 @@ describe('Test putItemHandler', function () {
             body: '{"id": "id1","name": "name1"}' 
         }; 
      
-        // Invoke putItemHandler() 
-        const result = await lambda.putItemHandler(event); 
+        // Invoke CreateDayItem() 
+        const result = await lambda.CreateDayItem(event); 
         const expectedResult = { 
             statusCode: 200, 
             body: JSON.stringify(returnedItem) 

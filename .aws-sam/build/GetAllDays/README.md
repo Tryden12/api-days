@@ -68,8 +68,8 @@ Test a single function by invoking it directly with a test event. An event is a 
 Run functions locally and invoke them with the `sam local invoke` command.
 
 ```bash
-my-application$ sam local invoke putItem --event events/event-post-item.json
-my-application$ sam local invoke getAllItems --event events/event-get-all-items.json
+my-application$ sam local invoke CreateDayItem --event events/event-create-item.json
+my-application$ sam local invoke GetAllDays --event events/event-get-all-days.json
 ```
 
 The AWS SAM CLI can also emulate your application's API. Use the `sam local start-api` command to run the API locally on port 3000.
