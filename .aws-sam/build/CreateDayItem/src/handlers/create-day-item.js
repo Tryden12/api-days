@@ -25,8 +25,6 @@ exports.CreateDayItem = async (event) => {
     const longDescription = body.longDescription;
     const category = body.category;
 
-    // Creates a new item, or replaces an old item with a new item
-    // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property
     let response = {};
 
     try {

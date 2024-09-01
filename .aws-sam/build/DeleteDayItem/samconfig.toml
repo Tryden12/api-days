@@ -17,8 +17,8 @@ lint = true
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 resolve_s3 = true
-stack_name = "stack-aprendero-api"
-s3_prefix = "stack-aprendero-api"
+stack_name = "stack-days-api"
+s3_prefix = "stack-days-api"
 region = "us-east-1"
 image_repositories = []
 

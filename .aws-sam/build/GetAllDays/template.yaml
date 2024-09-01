@@ -26,7 +26,7 @@ Resources:
         AllowMethods: "'DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT'"
         AllowOrigin: "'*'"
 
-  # Lambda function config associated with the source code: get-all-items.js
+  # Lambda function config associated with the source code: get-all-days.js
   GetAllDays:
     Type: AWS::Serverless::Function
     Properties:
@@ -54,7 +54,7 @@ Resources:
             Path: /GetAllDays
             Method: GET
 
-  # Lambda function config associated with the source code: get-by-id.js
+  # Lambda function config associated with the source code: get-day-by-id.js
   GetDayById:
     Type: AWS::Serverless::Function
     Properties:
@@ -82,7 +82,7 @@ Resources:
             Path: /GetDayById/{id}
             Method: GET
 
-  # Lambda function config associated with the source code: put-item.js
+  # Lambda function config associated with the source code: create-day-item.js
   CreateDayItem:
     Type: AWS::Serverless::Function
     Properties:
@@ -110,7 +110,7 @@ Resources:
             Path: /CreateDayItem
             Method: POST
 
-  # Lambda function config associated with the source code: delete-item.js
+  # Lambda function config associated with the source code: delete-day-item.js
   DeleteDayItem:
     Type: AWS::Serverless::Function
     Properties:
@@ -137,6 +137,35 @@ Resources:
             RestApiId: !Ref AprenderoApi
             Path: /DeleteDayItem/{id}
             Method: DELETE
+
+  # Lambda function config associated with the source code: update-day-item.js
+  UpdateDayItem:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: UpdateDayItem
+      Handler: src/handlers/update-day-item.UpdateDayItem
+      Runtime: nodejs16.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: POST method to update one day item to a DynamoDB table.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the DayTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DayTable
+      Environment:
+        Variables:
+          # Make table name accessible as environment variable from function code during execution
+          DAY_TABLE: !Ref DayTable
+      Events:
+        CreateDayItem:
+          Type: Api
+          Properties:
+            RestApiId: !Ref AprenderoApi
+            Path: /UpdateDayItem/{id}
+            Method: POST
+    
 
           
   # Simple syntax to create a DynamoDB table with a single attribute primary key, more in

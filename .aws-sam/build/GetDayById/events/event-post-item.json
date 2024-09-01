@@ -1,4 +1,10 @@
 {
     "httpMethod": "POST",
-    "body": "{\"id\": \"id1\",\"name\": \"name1\"}"
+    "body": {
+        "id": "1",
+        "category": "greetings",
+        "description": "Greet family, friends, and strangers",
+        "longDescription": "Today, we will focus on greeting family, friends, and strangers in different ways.",
+        "title": "Basic Greetings"
+       }
 }

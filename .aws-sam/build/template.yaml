@@ -132,6 +132,36 @@ Resources:
       CodeUri: DeleteDayItem
     Metadata:
       SamResourceId: DeleteDayItem
+  UpdateDayItem:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: UpdateDayItem
+      Handler: src/handlers/update-day-item.UpdateDayItem
+      Runtime: nodejs16.x
+      Architectures:
+      - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: POST method to update one day item to a DynamoDB table.
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: DayTable
+      Environment:
+        Variables:
+          DAY_TABLE:
+            Ref: DayTable
+      Events:
+        CreateDayItem:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: AprenderoApi
+            Path: /UpdateDayItem/{id}
+            Method: POST
+      CodeUri: UpdateDayItem
+    Metadata:
+      SamResourceId: UpdateDayItem
   DayTable:
     Type: AWS::DynamoDB::Table
     Properties:
