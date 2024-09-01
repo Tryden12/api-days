@@ -12,18 +12,17 @@ Resources:
         AllowHeaders: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'''
         AllowMethods: '''DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT'''
         AllowOrigin: '''*'''
-  GetAllItems:
+  GetAllDays:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: getAllItems
-      Handler: src/handlers/get-all-items.getAllItemsHandler
+      FunctionName: GetAllDays
+      Handler: src/handlers/get-all-days.GetAllDays
       Runtime: nodejs16.x
       Architectures:
       - x86_64
       MemorySize: 128
       Timeout: 100
-      Description: A simple example includes a HTTP get method to get all items from
-        a DynamoDB table.
+      Description: GET method to get all days from a DynamoDB table.
       Policies:
       - DynamoDBCrudPolicy:
           TableName:
@@ -33,28 +32,27 @@ Resources:
           DAY_TABLE:
             Ref: DayTable
       Events:
-        Api:
+        GetAllDays:
           Type: Api
           Properties:
             RestApiId:
               Ref: AprenderoApi
-            Path: /GetAllItems
+            Path: /GetAllDays
             Method: GET
-      CodeUri: GetAllItems
+      CodeUri: GetAllDays
     Metadata:
-      SamResourceId: GetAllItems
-  GetById:
+      SamResourceId: GetAllDays
+  GetDayById:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: getById
-      Handler: src/handlers/get-by-id.getByIdHandler
+      FunctionName: GetDayById
+      Handler: src/handlers/get-day-by-id.GetDayById
       Runtime: nodejs16.x
       Architectures:
       - x86_64
       MemorySize: 128
       Timeout: 100
-      Description: A simple example includes a HTTP get method to get one item by
-        id from a DynamoDB table.
+      Description: GET method to get one day by id from a DynamoDB table.
       Policies:
       - DynamoDBCrudPolicy:
           TableName:
@@ -64,28 +62,27 @@ Resources:
           DAY_TABLE:
             Ref: DayTable
       Events:
-        Api:
+        GetDayById:
           Type: Api
           Properties:
             RestApiId:
               Ref: AprenderoApi
-            Path: /GetById/{id}
+            Path: /GetDayById/{id}
             Method: GET
-      CodeUri: GetById
+      CodeUri: GetDayById
     Metadata:
-      SamResourceId: GetById
-  PutItem:
+      SamResourceId: GetDayById
+  CreateDayItem:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: putItem
-      Handler: src/handlers/put-item.putItemHandler
+      FunctionName: CreateDayItem
+      Handler: src/handlers/create-day-item.CreateDayItem
       Runtime: nodejs16.x
       Architectures:
       - x86_64
       MemorySize: 128
       Timeout: 100
-      Description: A simple example includes a HTTP post method to add one item to
-        a DynamoDB table.
+      Description: POST method to add one day item to a DynamoDB table.
       Policies:
       - DynamoDBCrudPolicy:
           TableName:
@@ -95,27 +92,27 @@ Resources:
           DAY_TABLE:
             Ref: DayTable
       Events:
-        Api:
+        CreateDayItem:
           Type: Api
           Properties:
             RestApiId:
               Ref: AprenderoApi
-            Path: /PutItem
+            Path: /CreateDayItem
             Method: POST
-      CodeUri: PutItem
+      CodeUri: CreateDayItem
     Metadata:
-      SamResourceId: PutItem
-  DeleteItem:
+      SamResourceId: CreateDayItem
+  DeleteDayItem:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: deleteItem
-      Handler: src/handlers/delete-item.deleteItemHandler
+      FunctionName: DeleteDayItem
+      Handler: src/handlers/delete-day-item.DeleteDayItem
       Runtime: nodejs16.x
       Architectures:
       - x86_64
       MemorySize: 128
       Timeout: 100
-      Description: HTTP delete method to delete one item from a DynamoDB table.
+      Description: DELETE method to delete one item from a DynamoDB table.
       Policies:
       - DynamoDBCrudPolicy:
           TableName:
@@ -130,11 +127,11 @@ Resources:
           Properties:
             RestApiId:
               Ref: AprenderoApi
-            Path: /DeleteItem/{id}
+            Path: /DeleteDayItem/{id}
             Method: DELETE
-      CodeUri: DeleteItem
+      CodeUri: DeleteDayItem
     Metadata:
-      SamResourceId: DeleteItem
+      SamResourceId: DeleteDayItem
   DayTable:
     Type: AWS::DynamoDB::Table
     Properties:
