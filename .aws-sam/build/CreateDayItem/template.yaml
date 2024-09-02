@@ -26,6 +26,34 @@ Resources:
         AllowMethods: "'DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT'"
         AllowOrigin: "'*'"
 
+  # Lambda function config associated with the source code: health-check.js
+  HealthCheck:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: HealthCheck
+      Handler: src/handlers/health-check.HealthCheck
+      Runtime: nodejs16.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: GET method to get the health status of the api.
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the DayTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DayTable
+      Environment:
+        Variables:
+          # Make table name accessible as environment variable from function code during execution
+          DAY_TABLE: !Ref DayTable
+      Events:
+        GetAllDays:
+          Type: Api
+          Properties:
+            RestApiId: !Ref AprenderoApi
+            Path: /health
+            Method: GET
+  
   # Lambda function config associated with the source code: get-all-days.js
   GetAllDays:
     Type: AWS::Serverless::Function

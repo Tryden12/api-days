@@ -12,6 +12,36 @@ Resources:
         AllowHeaders: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'''
         AllowMethods: '''DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT'''
         AllowOrigin: '''*'''
+  HealthCheck:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: HealthCheck
+      Handler: src/handlers/health-check.HealthCheck
+      Runtime: nodejs16.x
+      Architectures:
+      - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: GET method to get the health status of the api.
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: DayTable
+      Environment:
+        Variables:
+          DAY_TABLE:
+            Ref: DayTable
+      Events:
+        GetAllDays:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: AprenderoApi
+            Path: /health
+            Method: GET
+      CodeUri: HealthCheck
+    Metadata:
+      SamResourceId: HealthCheck
   GetAllDays:
     Type: AWS::Serverless::Function
     Properties:
